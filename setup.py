@@ -23,7 +23,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 # Arguments marked as "Required" below must be included for upload to PyPI.
 # Fields marked as "Optional" may be commented out.
 VERSION = "0.0.1"
-REQUIREMENTS = ["panflute"]
+REQUIREMENTS = ["panflute", "pandoc-docx-pagebreak"]
 setup(
     # This is the name of your project. The first time you publish this
     # package, this name will be registered for you. It will determine how
@@ -44,7 +44,8 @@ setup(
     # For a discussion on single-sourcing the version across setup.py and the
     # project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version=VERSION,  # Required
+    use_scm_version=True,
+    setup_requires=['setuptools_scm'],
 
     # This is a one-line description or tagline of what your project does. This
     # corresponds to the "Summary" metadata field:
