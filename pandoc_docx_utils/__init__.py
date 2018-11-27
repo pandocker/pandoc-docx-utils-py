@@ -12,7 +12,7 @@ import os
 import panflute as pf
 
 
-class HeaderUnnumbered(object):
+class UnnumberHeadings(object):
     """
     converts level 1~4 headers in 'unnumbered' class to unnumbered headers
     * works with docx output only
@@ -45,9 +45,25 @@ class HeaderUnnumbered(object):
         return elem
 
 
+class InlineFigureCentered(object):
+    """
+    moves a Para containing an Image into to "Centered" custom style div
+    * "Centered" custom style must be prepared in template
+    """
+
+    def action(self, elem, doc):
+        if (doc.format == "docx"):
+            if isinstance(elem, (pf.Para)) and len(elem.content) == 1:
+                for subelem in elem.content:
+                    if isinstance(subelem, pf.Image):
+                        d = pf.Div(elem, attributes={"custom-style": "Centered"})
+                        return d
+
+
 def main(doc=None):
-    hu = HeaderUnnumbered()
-    pf.run_filters([hu.action], doc=doc)
+    uh = UnnumberHeadings()
+    ifc = InlineFigureCentered()
+    pf.run_filters([uh.action, ifc.action], doc=doc)
     return doc
 
 
