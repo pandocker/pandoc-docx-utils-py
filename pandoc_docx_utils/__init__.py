@@ -56,7 +56,10 @@ class InlineFigureCentered(object):
             if isinstance(elem, (pf.Para)) and len(elem.content) == 1:
                 for subelem in elem.content:
                     if isinstance(subelem, pf.Image):
-                        d = pf.Div(elem, attributes={"custom-style": "Centered"})
+                        style = subelem.attributes.get("custom-style")
+                        if style is None:
+                            subelem.attributes["custom-style"] = "Body"
+                        d = pf.Div(elem, attributes=subelem.attributes)
                         return d
 
 
