@@ -53,12 +53,12 @@ class InlineFigureCentered(object):
 
     def action(self, elem, doc):
         if (doc.format == "docx"):
-            if isinstance(elem, (pf.Para)) and len(elem.content) == 1:
+            default_style = doc.get_metadata("image-div-style", "Image Div")
+            if isinstance(elem, pf.Para) and len(elem.content) == 1:
                 for subelem in elem.content:
                     if isinstance(subelem, pf.Image):
-                        style = subelem.attributes.get("custom-style")
-                        if style is None:
-                            subelem.attributes["custom-style"] = "Body"
+                        style = subelem.attributes.get("custom-style", default_style)
+                        subelem.attributes["custom-style"] = style
                         d = pf.Div(elem, attributes=subelem.attributes)
                         return d
 
