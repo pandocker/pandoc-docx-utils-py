@@ -28,17 +28,18 @@ class UnnumberHeadings(object):
     | 5     |           | Heading 5             |
     """
 
-    unnumbered = {1: "Heading Unnumbered 1",
-                  2: "Heading Unnumbered 2",
-                  3: "Heading Unnumbered 3",
-                  4: "Heading Unnumbered 4",
-                  }
-
     def action(self, elem, doc):
         if (doc.format == "docx"):
+            default_style = [doc.get_metadata("heading-unnumbered.1", "Heading Unnumbered 1"),
+                             doc.get_metadata("heading-unnumbered.2", "Heading Unnumbered 2"),
+                             doc.get_metadata("heading-unnumbered.3", "Heading Unnumbered 3"),
+                             doc.get_metadata("heading-unnumbered.4", "Heading Unnumbered 4"),
+                             ]
+            # pf.debug(default_style)
             if isinstance(elem, pf.Header) and "unnumbered" in elem.classes:
                 if elem.level < 5:
-                    elem.attributes.update({"custom-style": self.unnumbered[elem.level]})
+                    style = elem.attributes.get("custom-style", default_style[elem.level - 1])
+                    elem.attributes.update({"custom-style": style})
                     elem = pf.Div(pf.Para(*elem.content), attributes=elem.attributes,
                                   identifier=elem.identifier, classes=elem.classes)
                     # pf.debug(elem)
@@ -59,7 +60,8 @@ class InlineFigureCentered(object):
                     if isinstance(subelem, pf.Image):
                         style = subelem.attributes.get("custom-style", default_style)
                         subelem.attributes["custom-style"] = style
-                        d = pf.Div(elem, attributes=subelem.attributes)
+                        subelem.attributes.pop("custom-style")
+                        d = pf.Div(elem, attributes={"custom-style": style})
                         return d
 
 
