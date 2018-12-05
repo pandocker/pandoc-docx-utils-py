@@ -48,13 +48,13 @@ class UnnumberHeadings(object):
 
 class InlineFigureCentered(object):
     """
-    moves a Para containing an Image into to "Centered" custom style div
-    * "Centered" custom style must be prepared in template
+    moves a Para containing an Image into to "Image Caption" style div
+    * "Image Caption" custom style should be prepared in template
     """
 
     def action(self, elem, doc):
         if (doc.format == "docx"):
-            default_style = doc.get_metadata("image-div-style", "Image Div")
+            default_style = doc.get_metadata("image-div-style", "Image Caption")
             if isinstance(elem, pf.Para) and len(elem.content) == 1:
                 for subelem in elem.content:
                     if isinstance(subelem, pf.Image):
