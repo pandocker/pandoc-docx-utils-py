@@ -30,10 +30,11 @@ class UnnumberHeadings(object):
 
     def action(self, elem, doc):
         if (doc.format == "docx"):
-            for lv in range(1, 5):
-                if doc.get_metadata("heading-unnumbered.{}".format(lv)) is None:
-                    doc.metadata["heading-unnumbered"]["1"] = "Heading Unnumbered {}".format(lv)
-            default_style = [doc.get_metadata("heading-unnumbered.{}".format(lv)) for lv in range(1, 5)]
+            default_style = [doc.get_metadata("heading-unnumbered.1", "Heading Unnumbered 1"),
+                             doc.get_metadata("heading-unnumbered.2", "Heading Unnumbered 2"),
+                             doc.get_metadata("heading-unnumbered.3", "Heading Unnumbered 3"),
+                             doc.get_metadata("heading-unnumbered.4", "Heading Unnumbered 4"),
+                             ]
             # pf.debug(default_style)
             if isinstance(elem, pf.Header) and "unnumbered" in elem.classes:
                 if elem.level < 5:
@@ -53,10 +54,7 @@ class InlineFigureCentered(object):
 
     def action(self, elem, doc):
         if (doc.format == "docx"):
-            default_style = doc.get_metadata("image-div-style")
-            if default_style is None:
-                doc.metadata["image-div-style"] = "Image Caption"
-                default_style = "Image Caption"
+            default_style = doc.get_metadata("image-div-style", "Image Caption")
             if isinstance(elem, pf.Para) and len(elem.content) == 1:
                 for subelem in elem.content:
                     if isinstance(subelem, pf.Image):
