@@ -110,37 +110,40 @@ class ExtractBulletList(object):
         pf.debug("elem: {}".format(elem))
         while not isinstance(elem, pf.Doc):
             if isinstance(elem, pf.ListItem):
-                # pf.debug("content: {}".format(*p.content))
                 depth += 1
             elem = elem.parent
-        return depth
+        if depth == 0:
+            return "Bullet List 1"
+        else:
+            return "Bullet List 2"
 
     def action(self, elem, doc):
         if (doc.format == "docx"):
             if isinstance(elem, pf.BulletList):
-                p = elem
-                depth = 0
-                pf.debug("elem: {}".format(elem))
-                while not isinstance(p, pf.Doc):
-                    if isinstance(p, pf.ListItem):
-                        pf.debug("content: {}".format(*p.content))
-                        depth += 1
-                    p = p.parent
+                depth = self.get_depth(elem)
                 pf.debug(depth)
+                converted = []
 
-                # if depth >= 2:
-                #     d = pf.Div(*elem.content, attributes={"custom-style": "Bullet List 2"})
-                # else:
-                #     d = pf.Div(*elem.content, attributes={"custom-classes": "Bullet List 1"})
-                # pf.debug(d.attributes)
-                return []
+                for se in elem.content:
+                    converted.extend(
+                        [pf.Div(e, attributes={"custom-style": depth}) for e in se.content if
+                         not isinstance(e, pf.BulletList)])
+
+                m = []
+                for content in converted:
+                    while isinstance(content, pf.Div):
+                        content = content.content[0]
+                    m.append(content.parent)
+                pf.debug(m)
+                return m
 
 
 def main(doc=None):
     uh = UnnumberHeadings()
     ifc = InlineFigureCentered()
+    ebl = ExtractBulletList()
     s2p = Svg2Png()
-    pf.run_filters([uh.action, ifc.action, s2p.action], doc=doc)
+    pf.run_filters([uh.action, ifc.action, ebl.action, s2p.action], doc=doc)
     return doc
 
 
