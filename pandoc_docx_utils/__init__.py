@@ -105,6 +105,16 @@ class ExtractBulletList(object):
     * Level-3 and lower lists are forced to be Level-2
     """
 
+    def get_depth(self, elem):
+        depth = 0
+        pf.debug("elem: {}".format(elem))
+        while not isinstance(elem, pf.Doc):
+            if isinstance(elem, pf.ListItem):
+                # pf.debug("content: {}".format(*p.content))
+                depth += 1
+            elem = elem.parent
+        return depth
+
     def action(self, elem, doc):
         if (doc.format == "docx"):
             if isinstance(elem, pf.BulletList):
