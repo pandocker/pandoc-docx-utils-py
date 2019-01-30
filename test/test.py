@@ -8,7 +8,7 @@ def main():
     with open("markdown.md", "r") as f:
         md = f.read()
     doc = pf.Doc(*pf.convert_text(md), format="docx")
-    pf.debug(doc.content)
+    pf.debug("doc: {}".format(*doc.content))
     ebl = ExtractBulletList()
     pf.run_filter(ebl.action, doc=doc)
 
