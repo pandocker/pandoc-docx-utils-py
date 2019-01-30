@@ -129,7 +129,8 @@ class ExtractBulletList(object):
 def main(doc=None):
     uh = UnnumberHeadings()
     ifc = InlineFigureCentered()
-    pf.run_filters([uh.action, ifc.action], doc=doc)
+    s2p = Svg2Png()
+    pf.run_filters([uh.action, ifc.action, s2p.action], doc=doc)
     return doc
 
 
