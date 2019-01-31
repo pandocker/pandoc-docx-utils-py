@@ -119,27 +119,33 @@ class ExtractBulletList(object):
 
     def action(self, elem, doc):
         if (doc.format == "docx"):
-            if isinstance(elem, pf.BulletList):
+            # pf.debug(elem.__class__)
+            if isinstance(elem, pf.BulletList) or isinstance(elem, pf.OrderedList):
                 pf.debug("Bullet list found")
                 bullets = [doc.get_metadata("bullet-style.1", "Bullet List 1"),
-                           doc.get_metadata("bullet-style.2", "Bullet List 2")]
+                           doc.get_metadata("bullet-style.2", "Bullet List 2"),
+                           doc.get_metadata("numbered-bullets.1", "Number Bullet"),
+                           doc.get_metadata("numbered-bullets.2", "Number Bullet 2"),
+                           ]
 
                 depth = self.get_depth(elem)
+                if isinstance(elem, pf.OrderedList):
+                    depth += 2
                 # pf.debug(depth)
                 converted = []
 
                 for se in elem.content:
                     converted.extend(
                         [pf.Div(e, attributes={"custom-style": bullets[depth]}) for e in se.content if
-                         not isinstance(e, pf.BulletList)])
+                         not isinstance(e, pf.BulletList) and not isinstance(e, pf.OrderedList)])
 
-                m = []
+                ret = []
                 for content in converted:
                     while isinstance(content, pf.Div):
                         content = content.content[0]
-                    m.append(content.parent)
-                # pf.debug(m)
-                return m
+                    ret.append(content.parent)
+                # pf.debug(ret)
+                return ret
 
 
 def main(doc=None):
