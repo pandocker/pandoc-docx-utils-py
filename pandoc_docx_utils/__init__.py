@@ -154,5 +154,10 @@ def main(doc=None):
     return doc
 
 
+def extract_bullet_list(doc=None):
+    ebl = ExtractBulletList()
+    pf.run_filter(ebl.action, doc=doc)
+
+
 if __name__ == "__main__":
     main()

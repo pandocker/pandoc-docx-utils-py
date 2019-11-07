@@ -179,6 +179,7 @@ setup(
     entry_points={  # Optional
         'console_scripts': [
             'pandoc-docx-utils=pandoc_docx_utils:main',
+            'pandoc-docx-extract-bullet-list=pandoc_docx_utils:extract_bullet_list',
         ],
     },
 
